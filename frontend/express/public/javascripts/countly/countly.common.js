@@ -366,26 +366,12 @@
                     dataArrCounter++;
                 }
             } else {
-                var tmpRangeTotal = 0;
-
                 for (var i = 0; i < (countlyCommon.periodObj.uniquePeriodArr.length); i++) {
                     var tmp_x = countlyCommon.getDescendantProp(db, countlyCommon.periodObj.uniquePeriodArr[i] + "." + propertyName);
 
                     if (tmp_x && tmp_x[rangeArray[j]]) {
                         rangeTotal += tmp_x[rangeArray[j]];
                     }
-                }
-
-                for (var i = 0; i < (countlyCommon.periodObj.uniquePeriodCheckArr.length); i++) {
-                    var tmp_x = countlyCommon.getDescendantProp(db, countlyCommon.periodObj.uniquePeriodCheckArr[i] + "." + propertyName);
-
-                    if (tmp_x && tmp_x[rangeArray[j]]) {
-                        tmpRangeTotal += tmp_x[rangeArray[j]];
-                    }
-                }
-
-                if (rangeTotal > tmpRangeTotal) {
-                    rangeTotal = tmpRangeTotal;
                 }
 
                 if (rangeTotal != 0) {
