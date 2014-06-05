@@ -234,7 +234,30 @@ var fetch = {},
 
             common.returnOutput(params, output);
         });
-    }
+    };
+
+    fetch.fetchActivityLog = function(params) {
+        var appId = params.qstring.app_id;
+        var limit = Number(params.qstring.limit) || 10;
+        var skip = Number(params.qstring.skip) || 0;
+
+        common.db.collection("activity_log" + appId).find().skip(skip).limit(limit).toArray(function(err, items) {
+            common.returnOutput(params, items);
+        });
+
+    };
+
+    fetch.fetchAppUsers = function(params) {
+
+        var appId = params.qstring.app_id;
+        var limit = Number(params.qstring.limit)|| 10;
+        var skip = Number(params.qstring.skip) || 0;
+
+        common.db.collection("app_users" + appId).find().skip(skip).limit(limit).toArray(function(err, items) {
+            common.returnOutput(params, items);
+        });
+
+    };
 
 }(fetch));
 

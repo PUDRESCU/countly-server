@@ -346,6 +346,25 @@ if (cluster.isMaster) {
 
                 validateAppForWriteAPI(params);
 
+                common.db.collection('apps').findOne({'key':params.qstring.app_key}, function (err, app) {
+
+                    var logObject = {
+                        ipAddress: params.ip_address,
+                        log: params.qstring,
+                        dateCreated: new Date()
+                    };
+
+                    //write to collection
+                    common.db.collection("activity_log" + app._id).insert(logObject, function (err) {
+                        if (err) {
+                            console.log(err);
+                        }
+                        else {
+                            console.log("done");
+                        }
+                    });
+                });
+
                 if (!common.config.api.safe) {
                     common.returnMessage(params, 200, 'Success');
                 }
@@ -460,12 +479,32 @@ if (cluster.isMaster) {
                     return false;
                 }
 
+                if (params.qstring.limit) {
+                    if (isNaN(params.qstring.limit)) {
+                        common.returnMessage(params, 400, 'limit must be an integer');
+                        return false;
+                    }
+                }
+
+                if (params.qstring.skip) {
+                    if (isNaN(params.qstring.skip)) {
+                        common.returnMessage(params, 400, 'skip must be an integer');
+                        return false;
+                    }
+                }
+
                 switch (paths[3]) {
                     case 'dashboard':
                         validateUserForDataReadAPI(params, countlyApi.data.fetch.fetchDashboard);
                         break;
                     case 'countries':
                         validateUserForDataReadAPI(params, countlyApi.data.fetch.fetchCountries);
+                        break;
+                    case 'activity_log':
+                        validateUserForDataReadAPI(params, countlyApi.data.fetch.fetchActivityLog);
+                        break;
+                    case 'app_users':
+                        validateUserForDataReadAPI(params, countlyApi.data.fetch.fetchAppUsers);
                         break;
                     default:
                         common.returnMessage(params, 400, 'Invalid path, must be one of /dashboard or /countries');
